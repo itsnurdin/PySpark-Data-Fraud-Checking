@@ -1,0 +1,11 @@
+# PySpark potential fraud detect 
+
+## Overview
+This project processes referral data using PySpark, applying business logic to Implement these logics to detect potential fraud.
+
+## Setup Instructions
+1. **Clone the repository:**
+2. **Build Image Container Docker**
+    docker build -t potential_fraud . 
+3. **Run Container Docker**
+    docker run --rm -v $(pwd)/output:/app/output potential_fraud

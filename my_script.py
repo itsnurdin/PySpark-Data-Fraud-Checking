@@ -48,7 +48,7 @@ def data_cleansing(dataframes: dict) -> dict:
     return cleaned_dataframes
 
 
-
+# Task 3: Data Processing, Manupulasi timestamp, deduplikasi,dan penambahan kolom
 def process_data(dataframes: dict) -> DataFrame:
     #user_logs = dedupChecking('user_logs')
     #user_referrals = dedupChecking('user_referrals')
@@ -169,6 +169,7 @@ def process_data(dataframes: dict) -> DataFrame:
         dataframes_adjusted[key] = dataframe
     return dataframes_adjusted
 
+# Task 4: Bisnis logic untuk memeriksa Fraud (Validasi logic)
 def apply_business_logic(dataframes: dict) -> dict:
     """
     Apply business logic to detect potential fraud with add 'is_business_logic_valid' column.
@@ -295,7 +296,7 @@ def apply_business_logic(dataframes: dict) -> dict:
     final_df = spark.sql(query)    
     return  final_df
 
-
+# Task 5: Penyimpanan data final
 def save_dffinal_to_csv(dataframe: DataFrame, output_file_name: str):
     """
     Save final DataFrame into CSV file
@@ -311,12 +312,17 @@ def save_dffinal_to_csv(dataframe: DataFrame, output_file_name: str):
         shutil.move(os.path.join(temp_output_path, output_file), output_file_name)
     shutil.rmtree(temp_output_path)
 
+# Pipeline main logic
+def process_pipeline(file_paths: dict, output_path: str):
+    dataframes = load_csv(file_paths) #Task 1
+    cleaned_dataframes = data_cleansing(dataframes) #Task 2
+    processed_data = process_data(cleaned_dataframes) #Task 3
+    final_data = apply_business_logic(processed_data) #Task 4
+    save_dffinal_to_csv(final_data, output_path) #Task 5
 
-dataframes = load_csv(file_paths) #Task 1
-cleaned_dataframes = data_cleansing(dataframes) #Task 2
-processed_data = process_data(cleaned_dataframes) #Task 3
-final_data = apply_business_logic(processed_data) #Task 4
-save_dffinal_to_csv(final_data, "/app/output/final_data.csv") #Task 5
-
-# Stop Spark session
-spark.stop()
+if __name__ == "__main__":
+    # Start Pipeline
+    process_pipeline(file_paths, "/app/output/final_data.csv")
+    
+    # Stop Spark session
+    spark.stop()
